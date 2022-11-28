@@ -1,0 +1,15 @@
+.register-button {
+  background: var(--color-blue);
+  padding: 16px;
+}
+
+.register-input {
+  padding: 12px 8px;
+  flex: 1;
+  background: var(--color-gray);
+  border-radius: var(--border-radius);
+}
+.register-input-container {
+  display: flex;
+  gap: 4px;
+}
