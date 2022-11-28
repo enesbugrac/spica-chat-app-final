@@ -1,5 +1,5 @@
 import * as Bucket from "@spica-devkit/bucket";
-const BUCKET_ID = "637f3e12ea080c002bb421f1";
+const BUCKET_ID = "<ROOMS_BUCKET_ID>";
 
 export const initializeRoom = () => {
   let JWT = localStorage.getItem("userJWT") as string;

@@ -1,6 +1,6 @@
 import * as Identity from "@spica-devkit/identity";
 
-const API_KEY = "f2bcj17laqlao3a";
+const API_KEY = "<YOUR_API_KEY>";
 
 export const initializeAuth = () => {
   Identity.initialize({
