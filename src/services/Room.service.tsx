@@ -5,7 +5,7 @@ export const initializeRoom = () => {
   let JWT = localStorage.getItem("userJWT") as string;
   Bucket.initialize({
     identity: JWT,
-    publicUrl: "https://master.spicaengine.com/api",
+    publicUrl: "<YOUR_API_URL>",
   });
 };
 export const getRoombyID = (roomId: string) => {

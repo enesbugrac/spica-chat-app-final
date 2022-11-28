@@ -5,7 +5,7 @@ export const initializeMessages = () => {
   let JWT = localStorage.getItem("userJWT") as string;
   Bucket.initialize({
     identity: JWT as string,
-    publicUrl: "https://master.spicaengine.com/api",
+    publicUrl: "<YOUR_API_URL>",
   });
 };
 export const getMessagesRealtime = (roomID: string) => {

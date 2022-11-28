@@ -5,7 +5,7 @@ const API_KEY = "<YOUR_API_KEY>";
 export const initializeAuth = () => {
   Identity.initialize({
     apikey: API_KEY,
-    publicUrl: "https://master.spicaengine.com/api",
+    publicUrl: "<YOUR_API_URL>",
   });
 };
 export const register = (username: string, password: string) => {
