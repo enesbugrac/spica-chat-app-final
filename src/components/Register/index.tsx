@@ -2,22 +2,27 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
-import { auth, register } from "../../services/Auth.service";
+import AuthService from "../../services/Auth.service";
 function Register() {
   const [registerInput, setregisterInput] = useState({
     username: "",
     password: "",
   });
+  const [authService, setAuthService] = useState<AuthService>(
+    new AuthService()
+  );
   let navigate = useNavigate();
   useEffect(() => {
-    auth().then((res) => navigate("/landing"));
+    authService.auth().then((res) => navigate("/landing"));
   }, []);
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (registerInput.password && registerInput.username) {
-      register(registerInput.username, registerInput.password)
-        .then((res) => navigate("/"))
-        .catch(console.error);
+      await authService.register(
+        registerInput.username,
+        registerInput.password
+      );
+      navigate("/");
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

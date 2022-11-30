@@ -1,22 +1,23 @@
 import * as Bucket from "@spica-devkit/bucket";
-const BUCKET_ID = "<MESSAGES_BUCKET_ID>";
 
-export const initializeMessages = () => {
-  let JWT = localStorage.getItem("userJWT") as string;
-  Bucket.initialize({
-    identity: JWT as string,
-    publicUrl: "<YOUR_API_URL>",
-  });
-};
-export const getMessagesRealtime = (roomID: string) => {
-  initializeMessages();
-  return Bucket.data.realtime.getAll(BUCKET_ID, {
-    filter: {
-      room_id: { $regex: roomID },
-    },
-  });
-};
-export const insertMessage = (document: object) => {
-  initializeMessages();
-  return Bucket.data.insert(BUCKET_ID, document);
-};
+class MessageService {
+  private BUCKET_ID = "<MESSAGE_BUCKET_ID>";
+  constructor() {
+    let JWT = localStorage.getItem("userJWT") as string;
+    Bucket.initialize({
+      identity: JWT as string,
+      publicUrl: "<YOUR_PUBLIC_URL>",
+    });
+  }
+  getMessagesRealtime = (roomID: string) => {
+    return Bucket.data.realtime.getAll(this.BUCKET_ID, {
+      filter: {
+        room_id: { $regex: roomID },
+      },
+    });
+  };
+  insertMessage = (document: object) => {
+    return Bucket.data.insert(this.BUCKET_ID, document);
+  };
+}
+export default MessageService;

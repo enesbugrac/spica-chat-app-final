@@ -1,6 +1,6 @@
 import React from "react";
-import { auth } from "../../services/Auth.service";
-import { insertMessage } from "../../services/Message.service";
+import AuthService from "../../services/Auth.service";
+import MessageService from "../../services/Message.service";
 import styles from "./styles.module.css";
 
 function MessageInput(props: any) {
@@ -8,14 +8,20 @@ function MessageInput(props: any) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
-
+  const [authService, setAuthService] = React.useState<AuthService>(
+    new AuthService()
+  );
+  const [messageService, setMessageService] = React.useState<MessageService>(
+    new MessageService()
+  );
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const user: any = await auth().catch(console.error);
-    insertMessage({
-      sender_identity_id: user._id,
+    const user: any = await authService.auth().catch(console.error);
+    console.log(user);
+    messageService.insertMessage({
+      sender_user_id: user._id,
       text: value,
-      sender_name: user.identifier,
+      sender_name: user.user_name,
       room_id: props.roomId,
     });
     setValue("");

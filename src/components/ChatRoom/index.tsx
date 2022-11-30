@@ -3,13 +3,18 @@ import { MessageInput } from "../MessageInput";
 import { MessageList } from "../MessageList";
 import styles from "./styles.module.css";
 import { useState, useEffect } from "react";
-import { getRoombyID } from "../../services/Room.service";
+import RoomService from "../../services/Room.service";
 
 function ChatRoom() {
   const params = useParams();
   const [room, setRoom] = useState<{ room_title: string; _id: string }>();
+  const [roomService, setRoomService] = useState<RoomService>(
+    new RoomService()
+  );
   useEffect(() => {
-    getRoombyID(params.id as string).then((res: any) => setRoom(res));
+    roomService
+      .getRoombyID(params.id as string)
+      .then((res: any) => setRoom(res));
   }, []);
 
   return (

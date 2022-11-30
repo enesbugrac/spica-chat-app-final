@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
-import { auth, login } from "../../services/Auth.service";
+import AuthService from "../../services/Auth.service";
 
 function Login() {
   const [loginInput, setloginInput] = useState({
@@ -10,20 +10,23 @@ function Login() {
     password: "",
   });
   let navigate = useNavigate();
-
+  const [authService, setAuthService] = useState<AuthService>(
+    new AuthService()
+  );
   useEffect(() => {
-    auth().then((res) => navigate("/landing"));
+    authService.auth().then((res) => navigate("/landing"));
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loginInput.password && loginInput.username) {
-      login(loginInput.username, loginInput.password)
+      authService
+        .login(loginInput.username, loginInput.password)
         .then((res) => {
           localStorage.setItem("userJWT", res);
           navigate("/landing");
         })
-        .catch(console.error);
+        .catch((err) => console.error("err", err));
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

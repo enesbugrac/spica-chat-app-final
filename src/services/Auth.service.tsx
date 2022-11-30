@@ -1,29 +1,44 @@
 import * as Identity from "@spica-devkit/identity";
+import UserService from "./User.service";
 
-const API_KEY = "<YOUR_API_KEY>";
-
-export const initializeAuth = () => {
-  Identity.initialize({
-    apikey: API_KEY,
-    publicUrl: "<YOUR_API_URL>",
-  });
-};
-export const register = (username: string, password: string) => {
-  initializeAuth();
-  let newIdentity = {
-    identifier: username,
-    password: password,
-    policies: ["BucketFullAccess"],
-    attributes: {},
+class AuthService {
+  private API_KEY = "<YOUR_API_KEY>";
+  constructor() {
+    Identity.initialize({
+      apikey: this.API_KEY,
+      publicUrl: "<YOUR_PUBLIC_URL>",
+    });
+  }
+  register = async (username: string, password: string) => {
+    let newIdentity = {
+      identifier: username,
+      password: password,
+      policies: ["BucketFullAccess"],
+      attributes: {},
+    };
+    const userService = new UserService();
+    let user: any = await userService
+      .insertUser({ user_name: username })
+      .catch(console.error);
+    await Identity.insert({
+      ...newIdentity,
+      attributes: { message_users: user?._id },
+    }).catch((err) => {
+      userService.deleteUser(user?._id!);
+      console.log(err);
+    });
   };
-  return Identity.insert(newIdentity);
-};
-export const login = (username: string, password: string) => {
-  initializeAuth();
-  return Identity.login(username, password);
-};
-export const auth = () => {
-  initializeAuth();
-  const jwt: string = localStorage.getItem("userJWT") as string;
-  return Identity.verifyToken(jwt!);
-};
+  login = (username: string, password: string) => {
+    return Identity.login(username, password);
+  };
+  auth = async () => {
+    const jwt: string = localStorage.getItem("userJWT") as string;
+    const userService = new UserService();
+    let identityUser: any = await Identity.verifyToken(jwt!).catch(
+      console.error
+    );
+    return userService.getUser(identityUser.attributes.message_users);
+  };
+}
+
+export default AuthService;

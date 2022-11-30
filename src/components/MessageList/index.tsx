@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { auth } from "../../services/Auth.service";
-import { getMessagesRealtime } from "../../services/Message.service";
+import AuthService from "../../services/Auth.service";
+import MessageService from "../../services/Message.service";
 
 import styles from "./styles.module.css";
 
@@ -8,17 +8,27 @@ function MessageList(props: any) {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<Array<any>>();
   const [user, setUser] = useState<{ _id: string }>();
+  const [messageService, setMessageService] = React.useState<MessageService>(
+    new MessageService()
+  );
+  const [authService, setAuthService] = React.useState<AuthService>(
+    new AuthService()
+  );
   useEffect(() => {
-    const subs = getMessagesRealtime(props.roomId).subscribe((res: any) =>
-      setMessages(res)
-    );
+    const subs = messageService
+      .getMessagesRealtime(props.roomId)
+      .subscribe((res: any) => {
+        setMessages(res);
+        console.log(res);
+      });
     return () => {
       subs.unsubscribe();
     };
   }, [props.roomId]);
 
   useEffect(() => {
-    auth()
+    authService
+      .auth()
       .then((res: any) => setUser(res))
       .catch(console.error);
   }, []);
@@ -36,7 +46,7 @@ function MessageList(props: any) {
           <Message
             key={x._id}
             message={x}
-            isOwnMessage={x.sender_identity_id === user?._id}
+            isOwnMessage={x.sender_user_id === user?._id}
           />
         ))}
       </ul>
@@ -46,7 +56,7 @@ function MessageList(props: any) {
 
 function Message(props: any) {
   const { sender_name, text } = props.message;
-
+  console.log(sender_name);
   return (
     <li
       className={

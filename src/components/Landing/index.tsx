@@ -1,28 +1,40 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
 import { useEffect, useState } from "react";
-import { getAllRoomsRealTime, insertRoom } from "../../services/Room.service";
-import { auth } from "../../services/Auth.service";
+import RoomService from "../../services/Room.service";
+import AuthService from "../../services/Auth.service";
 
 function Landing() {
   const [chatRooms, setchatRooms] = useState<Array<any>>();
   const [newRoom, setNewRoom] = useState<string>();
+  const [roomService, setRoomService] = useState<RoomService>(
+    new RoomService()
+  );
+  const [authService, setAuthService] = useState<AuthService>(
+    new AuthService()
+  );
   const navigate = useNavigate();
   useEffect(() => {
-    const subs = getAllRoomsRealTime().subscribe((res) => setchatRooms(res));
+    const subs = roomService
+      .getAllRoomsRealTime()
+      .subscribe((res) => setchatRooms(res));
     return () => {
       subs.unsubscribe();
     };
-  }, []);
+  }, [roomService]);
   useEffect(() => {
-    auth().catch((e) => navigate("/"));
-  }, []);
+    authService.auth().catch((e) => navigate("/"));
+  }, [authService, navigate]);
   const handleCreateNewRoom = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    const user: any = await auth().catch(console.error);
-    insertRoom({ room_title: newRoom, creator_identity_id: user._id })
+    const user: any = await authService.auth().catch(console.error);
+    roomService
+      .insertRoom({
+        room_title: newRoom,
+        creator_user_id: user._id,
+      })
       .then((res) => setNewRoom(""))
       .catch(console.error);
   };
