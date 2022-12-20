@@ -8,15 +8,13 @@ function MessageInput(props: any) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
-  const [authService, setAuthService] = React.useState<AuthService>(
-    new AuthService()
-  );
+
   const [messageService, setMessageService] = React.useState<MessageService>(
     new MessageService()
   );
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const user: any = await authService.auth().catch(console.error);
+    const user: any = await AuthService.auth().catch(console.error);
     messageService.insertMessage({
       sender_user_id: user._id,
       text: value,

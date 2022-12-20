@@ -11,9 +11,7 @@ function MessageList(props: any) {
   const [messageService, setMessageService] = React.useState<MessageService>(
     new MessageService()
   );
-  const [authService, setAuthService] = React.useState<AuthService>(
-    new AuthService()
-  );
+
   useEffect(() => {
     const subs = messageService
       .getMessagesRealtime(props.roomId)
@@ -26,7 +24,7 @@ function MessageList(props: any) {
   }, [props.roomId]);
 
   useEffect(() => {
-    authService
+    AuthService
       .auth()
       .then((res: any) => setUser(res))
       .catch(console.error);

@@ -10,11 +10,10 @@ function Landing() {
   const [roomService, setRoomService] = useState<RoomService>(
     new RoomService()
   );
-  const [authService, setAuthService] = useState<AuthService>(
-    new AuthService()
-  );
+
   const navigate = useNavigate();
   useEffect(() => {
+    AuthService.auth().catch((e) => navigate("/"));
     const subs = roomService
       .getAllRoomsRealTime()
       .subscribe((res) => setchatRooms(res));
@@ -22,14 +21,12 @@ function Landing() {
       subs.unsubscribe();
     };
   }, [roomService]);
-  useEffect(() => {
-    authService.auth().catch((e) => navigate("/"));
-  }, [authService, navigate]);
+  useEffect(() => {}, [navigate]);
   const handleCreateNewRoom = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    const user: any = await authService.auth().catch(console.error);
+    const user: any = await AuthService.auth().catch(console.error);
     roomService
       .insertRoom({
         room_title: newRoom,

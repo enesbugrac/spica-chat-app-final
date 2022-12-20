@@ -1,12 +1,13 @@
 import * as Bucket from "@spica-devkit/bucket";
+import Config from "./Config";
 
 class MessageService {
-  private BUCKET_ID = "637f3d6eea080c002bb421d6";
+  private BUCKET_ID = Config.MESSAGE_BUCKET_ID;
   constructor() {
     let JWT = localStorage.getItem("userJWT") as string;
     Bucket.initialize({
       identity: JWT as string,
-      publicUrl: "https://master.spicaengine.com/api",
+      publicUrl: Config.API_URL,
     });
   }
   getMessagesRealtime = (roomID: string) => {

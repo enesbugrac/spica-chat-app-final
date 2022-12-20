@@ -1,54 +1,68 @@
 import * as Identity from "@spica-devkit/identity";
+import * as Bucket from "@spica-devkit/bucket";
+
+import Config from "./Config";
 import UserService from "./User.service";
 
+export interface User {
+  _id: string;
+  user_name: string;
+}
 class AuthService {
-  private API_KEY = "f2bcj17laqlao3a";
+  private API_KEY = Config.API_KEY;
   constructor() {
-    this.initialize();
+    this.identityInitialize();
   }
-  initialize = () => {
+  identityInitialize = () => {
     Identity.initialize({
       apikey: this.API_KEY,
-      publicUrl: "https://master.spicaengine.com/api",
+      publicUrl: Config.API_URL,
     });
   };
-  register = async (username: string, password: string) => {
-    this.initialize();
+  bucketInitialize = () => {
+    const initializeMethod = this.getJwt()
+      ? {
+          identity: this.getJwt(),
+        }
+      : { apikey: this.API_KEY };
+
+    Bucket.initialize({
+      ...initializeMethod,
+      publicUrl: Config.API_URL,
+    });
+  };
+  getJwt = () => (localStorage.getItem("userJWT") as string) || "";
+  register = (username: string, password: string) => {
     let newIdentity = {
       identifier: username,
       password: password,
       policies: ["BucketFullAccess"],
       attributes: {},
     };
-    const userService = new UserService();
-    let user: any = await userService
-      .insertUser({ user_name: username })
+
+    (UserService.insertUser({ user_name: username }) as Promise<User>)
+      .then((newUser) => {
+        Identity.insert({
+          ...newIdentity,
+          attributes: { user: newUser._id },
+        });
+      })
       .catch(console.error);
-    await Identity.insert({
-      ...newIdentity,
-      attributes: { message_users: user?._id },
-    }).catch((err) => {
-      userService.deleteUser(user?._id!);
-    });
   };
   login = (username: string, password: string) => {
-    this.initialize();
     return Identity.login(username, password);
   };
+
   auth = async () => {
-    this.initialize();
-    const jwt: string = localStorage.getItem("userJWT") as string;
-    const userService = new UserService();
+    this.bucketInitialize();
+    const jwt = this.getJwt();
     if (jwt) {
-      let identityUser: any = await Identity.verifyToken(jwt!).catch((err) => {
+      let identityUser: any = await Identity.verifyToken(jwt).catch((err) => {
         throw new Error(err);
       });
-      console.log(identityUser);
-      return userService.getUser(identityUser.attributes.message_users);
-    } else {
-      throw new Error("JWT not found!");
-    }
+      return UserService.getUser(identityUser.attributes.user);
+    } else throw new Error("JWT not found!");
   };
 }
 
-export default AuthService;
+export default new AuthService();

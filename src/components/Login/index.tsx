@@ -10,11 +10,9 @@ function Login() {
     password: "",
   });
   let navigate = useNavigate();
-  const [authService, setAuthService] = useState<AuthService>(
-    new AuthService()
-  );
+
   useEffect(() => {
-    authService
+    AuthService
       .auth()
       .then((res) => navigate("/landing"))
       .catch();
@@ -23,7 +21,7 @@ function Login() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loginInput.password && loginInput.username) {
-      authService
+      AuthService
         .login(loginInput.username, loginInput.password)
         .then((res) => {
           localStorage.setItem("userJWT", res);

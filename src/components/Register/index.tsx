@@ -8,12 +8,10 @@ function Register() {
     username: "",
     password: "",
   });
-  const [authService, setAuthService] = useState<AuthService>(
-    new AuthService()
-  );
+
   let navigate = useNavigate();
   useEffect(() => {
-    authService.auth().then((res) => {
+    AuthService.auth().then((res) => {
       if (res) {
         navigate("/landing");
       }
@@ -22,7 +20,7 @@ function Register() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (registerInput.password && registerInput.username) {
-      await authService.register(
+      await AuthService.register(
         registerInput.username,
         registerInput.password
       );
