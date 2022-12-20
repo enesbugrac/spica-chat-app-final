@@ -14,7 +14,10 @@ function Login() {
     new AuthService()
   );
   useEffect(() => {
-    authService.auth().then((res) => navigate("/landing"));
+    authService
+      .auth()
+      .then((res) => navigate("/landing"))
+      .catch();
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +29,7 @@ function Login() {
           localStorage.setItem("userJWT", res);
           navigate("/landing");
         })
-        .catch((err) => console.error("err", err));
+        .catch((err) => alert(err.message));
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

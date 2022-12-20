@@ -13,7 +13,11 @@ function Register() {
   );
   let navigate = useNavigate();
   useEffect(() => {
-    authService.auth().then((res) => navigate("/landing"));
+    authService.auth().then((res) => {
+      if (res) {
+        navigate("/landing");
+      }
+    });
   }, []);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

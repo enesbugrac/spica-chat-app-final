@@ -19,7 +19,6 @@ function MessageList(props: any) {
       .getMessagesRealtime(props.roomId)
       .subscribe((res: any) => {
         setMessages(res);
-        console.log(res);
       });
     return () => {
       subs.unsubscribe();
@@ -56,7 +55,6 @@ function MessageList(props: any) {
 
 function Message(props: any) {
   const { sender_name, text } = props.message;
-  console.log(sender_name);
   return (
     <li
       className={

@@ -1,12 +1,12 @@
 import * as Bucket from "@spica-devkit/bucket";
 
 class RoomService {
-  private BUCKET_ID = "<ROOM_BUCKET_ID>";
+  private BUCKET_ID = "637f3e12ea080c002bb421f1";
   constructor() {
     let JWT = localStorage.getItem("userJWT") as string;
     Bucket.initialize({
       identity: JWT,
-      publicUrl: "<YOUR_PUBLIC_URL>",
+      publicUrl: "https://master.spicaengine.com/api",
     });
   }
   insertRoom = (document: object) => {
