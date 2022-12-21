@@ -1,21 +1,31 @@
-import React from "react";
+import { RealtimeConnection } from "@spica-devkit/bucket";
+import React, { useRef, useEffect } from "react";
 import AuthService from "../../services/Auth.service";
 import MessageService from "../../services/Message.service";
 import styles from "./styles.module.css";
 
 function MessageInput(props: any) {
   const [value, setValue] = React.useState("");
+  const messageConnection = useRef<RealtimeConnection<unknown[]>>();
+  const setConnection = () => {
+    messageConnection.current = MessageService.getRealtimeConnection();
+  };
+  useEffect(() => {
+    setConnection();
+    const subscription = messageConnection.current?.subscribe();
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [props.roomId]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  const [messageService, setMessageService] = React.useState<MessageService>(
-    new MessageService()
-  );
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const user: any = await AuthService.auth().catch(console.error);
-    messageService.insertMessage({
+    messageConnection.current?.insert({
       sender_user_id: user._id,
       text: value,
       sender_name: user.user_name,

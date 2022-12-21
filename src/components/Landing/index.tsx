@@ -1,39 +1,42 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RoomService from "../../services/Room.service";
 import AuthService from "../../services/Auth.service";
+import { RealtimeConnection } from "@spica-devkit/bucket";
 
 function Landing() {
-  const [chatRooms, setchatRooms] = useState<Array<any>>();
+  const [chatRooms, setchatRooms] = useState<Array<any>>([]);
   const [newRoom, setNewRoom] = useState<string>();
-  const [roomService, setRoomService] = useState<RoomService>(
-    new RoomService()
-  );
-
+  const roomConnection = useRef<RealtimeConnection<unknown[]>>();
   const navigate = useNavigate();
+
+  const setConnection = () => {
+    roomConnection.current =
+      RoomService.getRealtimeConnection() as RealtimeConnection<unknown[]>;
+  };
+
   useEffect(() => {
     AuthService.auth().catch((e) => navigate("/"));
-    const subs = roomService
-      .getAllRoomsRealTime()
-      .subscribe((res) => setchatRooms(res));
+    setConnection();
+    let subscription = roomConnection.current?.subscribe((response) =>
+      setchatRooms(response)
+    );
+
     return () => {
-      subs.unsubscribe();
+      subscription?.unsubscribe();
     };
-  }, [roomService]);
-  useEffect(() => {}, [navigate]);
+  }, []);
+
   const handleCreateNewRoom = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
     const user: any = await AuthService.auth().catch(console.error);
-    roomService
-      .insertRoom({
-        room_title: newRoom,
-        creator_user_id: user._id,
-      })
-      .then((res) => setNewRoom(""))
-      .catch(console.error);
+    roomConnection.current?.insert({
+      room_title: newRoom,
+      creator_user_id: user._id,
+    });
   };
   return (
     <>

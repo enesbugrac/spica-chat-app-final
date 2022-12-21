@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { RealtimeConnection } from "@spica-devkit/bucket";
+import React, { useEffect, useState, useRef } from "react";
 import AuthService from "../../services/Auth.service";
 import MessageService from "../../services/Message.service";
 
@@ -8,24 +9,24 @@ function MessageList(props: any) {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<Array<any>>();
   const [user, setUser] = useState<{ _id: string }>();
-  const [messageService, setMessageService] = React.useState<MessageService>(
-    new MessageService()
-  );
+  const messageConnection = useRef<RealtimeConnection<unknown[]>>();
 
   useEffect(() => {
-    const subs = messageService
-      .getMessagesRealtime(props.roomId)
-      .subscribe((res: any) => {
-        setMessages(res);
-      });
+    setConnection();
+    const subscription = messageConnection.current?.subscribe((data) =>
+      setMessages(data)
+    );
     return () => {
-      subs.unsubscribe();
+      subscription?.unsubscribe();
     };
   }, [props.roomId]);
-
+  const setConnection = () => {
+    messageConnection.current = MessageService.getRealtimeConnectionWithID(
+      props.roomId
+    ) as RealtimeConnection<unknown[]>;
+  };
   useEffect(() => {
-    AuthService
-      .auth()
+    AuthService.auth()
       .then((res: any) => setUser(res))
       .catch(console.error);
   }, []);

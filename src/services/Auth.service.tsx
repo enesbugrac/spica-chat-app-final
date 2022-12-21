@@ -1,7 +1,6 @@
 import * as Identity from "@spica-devkit/identity";
 import * as Bucket from "@spica-devkit/bucket";
 
-import Config from "./Config";
 import UserService from "./User.service";
 
 export interface User {
@@ -9,14 +8,14 @@ export interface User {
   user_name: string;
 }
 class AuthService {
-  private API_KEY = Config.API_KEY;
+  private API_KEY = process.env.REACT_APP_API_KEY || "";
   constructor() {
     this.identityInitialize();
   }
   identityInitialize = () => {
     Identity.initialize({
       apikey: this.API_KEY,
-      publicUrl: Config.API_URL,
+      publicUrl: process.env.REACT_APP_API_URL,
     });
   };
   bucketInitialize = () => {
@@ -25,10 +24,9 @@ class AuthService {
           identity: this.getJwt(),
         }
       : { apikey: this.API_KEY };
-
     Bucket.initialize({
       ...initializeMethod,
-      publicUrl: Config.API_URL,
+      publicUrl: process.env.REACT_APP_API_URL,
     });
   };
   getJwt = () => (localStorage.getItem("userJWT") as string) || "";

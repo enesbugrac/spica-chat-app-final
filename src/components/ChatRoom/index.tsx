@@ -8,13 +8,11 @@ import RoomService from "../../services/Room.service";
 function ChatRoom() {
   const params = useParams();
   const [room, setRoom] = useState<{ room_title: string; _id: string }>();
-  const [roomService, setRoomService] = useState<RoomService>(
-    new RoomService()
-  );
+
   useEffect(() => {
-    roomService
-      .getRoombyID(params.id as string)
-      .then((res: any) => setRoom(res));
+    RoomService.getRoombyID(params.id as string).then((res: any) =>
+      setRoom(res)
+    );
   }, []);
 
   return (

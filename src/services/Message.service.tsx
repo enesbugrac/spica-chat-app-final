@@ -1,24 +1,29 @@
 import * as Bucket from "@spica-devkit/bucket";
-import Config from "./Config";
 
 class MessageService {
-  private BUCKET_ID = Config.MESSAGE_BUCKET_ID;
+  private BUCKET_ID = process.env.REACT_APP_MESSAGE_BUCKET_ID || "";
+  private connection: Bucket.RealtimeConnection<unknown[]>;
+
   constructor() {
     let JWT = localStorage.getItem("userJWT") as string;
     Bucket.initialize({
-      identity: JWT as string,
-      publicUrl: Config.API_URL,
+      identity: JWT,
+      publicUrl: process.env.REACT_APP_API_URL,
     });
+    this.connection = Bucket.data.realtime.getAll(this.BUCKET_ID);
   }
-  getMessagesRealtime = (roomID: string) => {
-    return Bucket.data.realtime.getAll(this.BUCKET_ID, {
+
+  getRealtimeConnectionWithID = (roomID: string) => {
+    this.connection = Bucket.data.realtime.getAll(this.BUCKET_ID, {
       filter: {
         room_id: { $regex: roomID },
       },
     });
+    return this.connection;
   };
-  insertMessage = (document: object) => {
-    return Bucket.data.insert(this.BUCKET_ID, document);
+  getRealtimeConnection = () => {
+    this.connection = Bucket.data.realtime.getAll(this.BUCKET_ID);
+    return this.connection;
   };
 }
-export default MessageService;
+export default new MessageService();
