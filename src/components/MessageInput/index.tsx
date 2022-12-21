@@ -7,9 +7,7 @@ import styles from "./styles.module.css";
 function MessageInput(props: any) {
   const [value, setValue] = React.useState("");
   const messageConnection = useRef<RealtimeConnection<unknown[]>>();
-  const setConnection = () => {
-    messageConnection.current = MessageService.getRealtimeConnection();
-  };
+
   useEffect(() => {
     setConnection();
     const subscription = messageConnection.current?.subscribe();
@@ -18,6 +16,9 @@ function MessageInput(props: any) {
     };
   }, [props.roomId]);
 
+  const setConnection = () => {
+    messageConnection.current = MessageService.getRealtimeConnection();
+  };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };

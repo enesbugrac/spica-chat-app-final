@@ -12,6 +12,9 @@ function MessageList(props: any) {
   const messageConnection = useRef<RealtimeConnection<unknown[]>>();
 
   useEffect(() => {
+    AuthService.auth()
+      .then((res: any) => setUser(res))
+      .catch(console.error);
     setConnection();
     const subscription = messageConnection.current?.subscribe((data) =>
       setMessages(data)
@@ -20,16 +23,12 @@ function MessageList(props: any) {
       subscription?.unsubscribe();
     };
   }, [props.roomId]);
+
   const setConnection = () => {
     messageConnection.current = MessageService.getRealtimeConnectionWithID(
       props.roomId
     ) as RealtimeConnection<unknown[]>;
   };
-  useEffect(() => {
-    AuthService.auth()
-      .then((res: any) => setUser(res))
-      .catch(console.error);
-  }, []);
 
   React.useLayoutEffect(() => {
     if (containerRef.current) {
