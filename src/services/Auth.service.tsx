@@ -8,11 +8,13 @@ export interface User {
   user_name: string;
 }
 class AuthService {
+  user!: User;
   private API_KEY = process.env.REACT_APP_API_KEY || "";
   constructor() {
-    this.identityInitialize();
     this.bucketInitialize();
+    this.identityInitialize();
   }
+
   identityInitialize = () => {
     Identity.initialize({
       apikey: this.API_KEY,
@@ -39,14 +41,14 @@ class AuthService {
       attributes: {},
     };
 
-    (UserService.insertUser({ user_name: username }) as Promise<User>)
-      .then((newUser) => {
-        Identity.insert({
-          ...newIdentity,
-          attributes: { user: newUser._id },
-        });
-      })
-      .catch(console.error);
+    return (
+      UserService.insertUser({ user_name: username }) as Promise<User>
+    ).then((newUser) => {
+      Identity.insert({
+        ...newIdentity,
+        attributes: { user: newUser._id },
+      });
+    });
   };
   login = (username: string, password: string) => {
     return Identity.login(username, password);
@@ -55,10 +57,13 @@ class AuthService {
   auth = async () => {
     const jwt = this.getJwt();
     if (jwt) {
+      this.bucketInitialize();
       let identityUser: any = await Identity.verifyToken(jwt).catch((err) => {
         throw new Error(err);
       });
-      return UserService.getUser(identityUser.attributes.user);
+      return UserService.getUser(identityUser.attributes.user).then(
+        (res) => (this.user = res)
+      );
     } else throw new Error("JWT not found!");
   };
 }

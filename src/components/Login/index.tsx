@@ -14,7 +14,7 @@ function Login() {
   useEffect(() => {
     AuthService
       .auth()
-      .then((res) => navigate("/landing"))
+      .then((_) => navigate("/landing"))
       .catch();
   }, []);
 

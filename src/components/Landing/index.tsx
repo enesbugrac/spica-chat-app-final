@@ -14,7 +14,7 @@ function Landing() {
   useEffect(() => {
     AuthService.auth()
       .then()
-      .catch((e) => navigate("/"));
+      .catch((_) => navigate("/"));
     setConnection();
     let subscription = roomConnection.current?.subscribe((response) =>
       setchatRooms(response)

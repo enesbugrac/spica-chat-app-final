@@ -11,20 +11,16 @@ function Register() {
 
   let navigate = useNavigate();
   useEffect(() => {
-    AuthService.auth().then((res) => {
-      if (res) {
-        navigate("/landing");
-      }
+    AuthService.auth().then((_) => {
+      navigate("/landing");
     });
   }, []);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (registerInput.password && registerInput.username) {
-      await AuthService.register(
-        registerInput.username,
-        registerInput.password
-      );
-      navigate("/");
+      AuthService.register(registerInput.username, registerInput.password)
+        .then((_) => navigate("/"))
+        .catch((error) => alert(error));
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

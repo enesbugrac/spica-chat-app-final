@@ -1,6 +1,6 @@
 import { RealtimeConnection } from "@spica-devkit/bucket";
 import React, { useRef, useEffect } from "react";
-import AuthService from "../../services/Auth.service";
+import AuthService, { User } from "../../services/Auth.service";
 import MessageService from "../../services/Message.service";
 import styles from "./styles.module.css";
 
@@ -25,7 +25,7 @@ function MessageInput(props: any) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const user: any = await AuthService.auth().catch(console.error);
+    const user: User = AuthService.user;
     messageConnection.current?.insert({
       sender_user_id: user._id,
       text: value,
