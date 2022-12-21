@@ -11,6 +11,7 @@ class AuthService {
   private API_KEY = process.env.REACT_APP_API_KEY || "";
   constructor() {
     this.identityInitialize();
+    this.bucketInitialize();
   }
   identityInitialize = () => {
     Identity.initialize({
@@ -53,6 +54,7 @@ class AuthService {
 
   auth = async () => {
     this.bucketInitialize();
+    console.log("sasasa");
     const jwt = this.getJwt();
     if (jwt) {
       let identityUser: any = await Identity.verifyToken(jwt).catch((err) => {

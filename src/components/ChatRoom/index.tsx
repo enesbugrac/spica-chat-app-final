@@ -1,19 +1,22 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { MessageInput } from "../MessageInput";
 import { MessageList } from "../MessageList";
 import styles from "./styles.module.css";
 import { useState, useEffect } from "react";
 import RoomService from "../../services/Room.service";
+import AuthService from "../../services/Auth.service";
 
 function ChatRoom() {
   const params = useParams();
   const [room, setRoom] = useState<{ room_title: string; _id: string }>();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    AuthService.auth().catch((_) => navigate("/"));
     RoomService.getRoombyID(params.id as string).then((res: any) =>
       setRoom(res)
     );
-  }, []);
+  }, [params.id, navigate]);
 
   return (
     <>

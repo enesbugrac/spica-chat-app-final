@@ -11,13 +11,10 @@ function Landing() {
   const roomConnection = useRef<RealtimeConnection<unknown[]>>();
   const navigate = useNavigate();
 
-  const setConnection = () => {
-    roomConnection.current =
-      RoomService.getRealtimeConnection() as RealtimeConnection<unknown[]>;
-  };
-
   useEffect(() => {
-    AuthService.auth().catch((e) => navigate("/"));
+    AuthService.auth()
+      .then()
+      .catch((e) => navigate("/"));
     setConnection();
     let subscription = roomConnection.current?.subscribe((response) =>
       setchatRooms(response)
@@ -27,7 +24,10 @@ function Landing() {
       subscription?.unsubscribe();
     };
   }, []);
-
+  const setConnection = () => {
+    roomConnection.current =
+      RoomService.getRealtimeConnection() as RealtimeConnection<unknown[]>;
+  };
   const handleCreateNewRoom = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
