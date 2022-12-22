@@ -29,10 +29,12 @@ function Landing() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    roomConnection.current?.insert({
-      room_title: newRoom,
-      creator_user_id: AuthService?.user?._id,
-    });
+    if (newRoom?.length! > 0) {
+      roomConnection.current?.insert({
+        room_title: newRoom,
+        creator_user_id: AuthService?.user?._id,
+      });
+    }
   };
   return (
     <div className="page">
@@ -57,17 +59,13 @@ function Landing() {
             setNewRoom(e.target.value)
           }
         />
-        <button onClick={handleCreateNewRoom}>
-          Create New Room
-        </button>
+        <button onClick={handleCreateNewRoom}>Create New Room</button>
       </div>
 
       <ul className="chat-room-list card">
         {chatRooms?.map((room) => (
           <Link className="card" to={`/room/${room._id}`}>
-            <li  key={room._id}>
-              {room.room_title}
-            </li>
+            <li key={room._id}>{room.room_title}</li>
           </Link>
         ))}
       </ul>
