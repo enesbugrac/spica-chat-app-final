@@ -1,20 +1,18 @@
 import { RealtimeConnection } from "@spica-devkit/bucket";
 import React, { useEffect, useState, useRef } from "react";
-import AuthService from "../../services/Auth.service";
+import AuthService, { User } from "../../services/Auth.service";
 import MessageService from "../../services/Message.service";
 
-import styles from "./styles.module.css";
+import "./styles.css";
 
 function MessageList(props: any) {
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<Array<any>>();
-  const [user, setUser] = useState<{ _id: string }>();
+  const [user, setUser] = useState<User | null>();
   const messageConnection = useRef<RealtimeConnection<unknown[]>>();
 
   useEffect(() => {
-    AuthService.auth()
-      .then((res: any) => setUser(res))
-      .catch(console.error);
+    setUser(AuthService.user);
     setConnection();
     const subscription = messageConnection.current?.subscribe((data) =>
       setMessages(data)
@@ -37,8 +35,8 @@ function MessageList(props: any) {
   });
 
   return (
-    <div className={styles["message-list-container"]} ref={containerRef}>
-      <ul className={styles["message-list"]}>
+    <div className="message-list-container" ref={containerRef}>
+      <ul className="message-list">
         {messages?.map((x) => (
           <Message
             key={x._id}
@@ -54,16 +52,8 @@ function MessageList(props: any) {
 function Message(props: any) {
   const { sender_name, text } = props.message;
   return (
-    <li
-      className={
-        props.isOwnMessage
-          ? `${styles["message"]} ${styles["own-message"]}`
-          : styles["message"]
-      }
-    >
-      <h4 className={styles["sender"]}>
-        {props.isOwnMessage ? "You" : sender_name}
-      </h4>
+    <li className={`message ${props.isOwnMessage && "own-message"}`}>
+      <h4 className="sender">{props.isOwnMessage ? "You" : sender_name}</h4>
       <div>{text}</div>
     </li>
   );

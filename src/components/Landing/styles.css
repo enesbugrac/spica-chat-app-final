@@ -5,7 +5,6 @@
 }
 .room-input {
   padding: 12px 8px;
-  flex: 1;
   background: var(--color-gray);
   border-radius: var(--border-radius);
 }

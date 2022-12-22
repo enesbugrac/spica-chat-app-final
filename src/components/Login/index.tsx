@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/Auth.service";
+import "./styles.css";
 
 function Login() {
   const [loginInput, setloginInput] = useState({
@@ -11,23 +11,18 @@ function Login() {
   });
   let navigate = useNavigate();
 
-  useEffect(() => {
-    AuthService
-      .auth()
-      .then((_) => navigate("/landing"))
-      .catch();
-  }, []);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loginInput.password && loginInput.username) {
-      AuthService
-        .login(loginInput.username, loginInput.password)
-        .then((res) => {
+      AuthService.login(loginInput.username, loginInput.password)
+        .then(async (res) => {
           localStorage.setItem("userJWT", res);
-          navigate("/landing");
+          await AuthService.auth();
         })
-        .catch((err) => alert(err.message));
+        .catch((err) => alert(err.message))
+        .finally(() => {
+          navigate("/");
+        });
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,11 +32,11 @@ function Login() {
   return (
     <>
       <h2>Login to join a Chat!</h2>
-      <form onSubmit={handleSubmit} className={styles["login-input-container"]}>
+      <form onSubmit={handleSubmit} className="login-input-container">
         <input
           type="text"
           placeholder="Enter Username"
-          className={styles["login-input"]}
+          className="login-input"
           required
           name="username"
           value={loginInput.username}
@@ -50,14 +45,14 @@ function Login() {
         <input
           type="password"
           placeholder="Enter Password"
-          className={styles["login-input"]}
+          className="login-input"
           required
           onChange={handleChange}
           value={loginInput.password}
           name="password"
         />
         <div>
-          <button className={styles["login-button"]}>Login</button>
+          <button className="login-button">Login</button>
         </div>
       </form>
       <div>

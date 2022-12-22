@@ -8,7 +8,7 @@ export interface User {
   user_name: string;
 }
 class AuthService {
-  user!: User;
+  user!: User | null;
   private API_KEY = process.env.REACT_APP_API_KEY || "";
   constructor() {
     this.bucketInitialize();
@@ -59,12 +59,15 @@ class AuthService {
     if (jwt) {
       this.bucketInitialize();
       let identityUser: any = await Identity.verifyToken(jwt).catch((err) => {
-        throw new Error(err);
+        alert(err.message);
       });
-      return UserService.getUser(identityUser.attributes.user).then(
+      return await UserService.getUser(identityUser.attributes.user).then(
         (res) => (this.user = res)
       );
-    } else throw new Error("JWT not found!");
+    } else {
+      this.user = null;
+      return;
+    }
   };
 }
 

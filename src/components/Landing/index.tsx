@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
-import styles from "./styles.module.css";
 import { useEffect, useRef, useState } from "react";
 import RoomService from "../../services/Room.service";
 import AuthService from "../../services/Auth.service";
 import { RealtimeConnection } from "@spica-devkit/bucket";
+import "./styles.css";
 
 function Landing() {
   const [chatRooms, setchatRooms] = useState<Array<any>>([]);
@@ -12,9 +12,6 @@ function Landing() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    AuthService.auth()
-      .then()
-      .catch((_) => navigate("/"));
     setConnection();
     let subscription = roomConnection.current?.subscribe((response) =>
       setchatRooms(response)
@@ -42,29 +39,27 @@ function Landing() {
     <>
       <h2>Choose a Chat Room</h2>
       <input
-        className={styles["room-input"]}
+        className="room-input"
         value={newRoom}
         placeholder="Enter New Room Title..."
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setNewRoom(e.target.value)
         }
       />
-      <button
-        className={styles["create-room-button"]}
-        onClick={handleCreateNewRoom}
-      >
+      <button className="create-room-button" onClick={handleCreateNewRoom}>
         Create New Room
       </button>
       <button
-        className={styles["log-out-button"]}
+        className="log-out-button"
         onClick={() => {
           localStorage.removeItem("userJWT");
-          navigate("/");
+          AuthService.auth();
+          navigate("/login");
         }}
       >
         Log Out
       </button>
-      <ul className={styles["chat-room-list"]}>
+      <ul className="chat-room-list">
         {chatRooms?.map((room) => (
           <li key={room._id}>
             <Link to={`/room/${room._id}`}>{room.room_title}</Link>

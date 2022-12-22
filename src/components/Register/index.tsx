@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/Auth.service";
+import "./styles.css";
+
 function Register() {
   const [registerInput, setregisterInput] = useState({
     username: "",
@@ -10,17 +11,13 @@ function Register() {
   });
 
   let navigate = useNavigate();
-  useEffect(() => {
-    AuthService.auth().then((_) => {
-      navigate("/landing");
-    });
-  }, []);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (registerInput.password && registerInput.username) {
       AuthService.register(registerInput.username, registerInput.password)
         .then((_) => navigate("/"))
-        .catch((error) => alert(error));
+        .catch((error) => alert(error.message));
     }
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,14 +27,11 @@ function Register() {
   return (
     <>
       <h2>Register to join a Chat!</h2>
-      <form
-        onSubmit={handleSubmit}
-        className={styles["register-input-container"]}
-      >
+      <form onSubmit={handleSubmit} className="register-input-container">
         <input
           type="text"
           placeholder="Enter Username"
-          className={styles["register-input"]}
+          className="register-input"
           required
           name="username"
           value={registerInput.username}
@@ -46,14 +40,14 @@ function Register() {
         <input
           type="password"
           placeholder="Enter Password"
-          className={styles["register-input"]}
+          className="register-input"
           required
           onChange={handleChange}
           value={registerInput.password}
           name="password"
         />
         <div>
-          <button className={styles["register-button"]}>Register</button>
+          <button className="register-button">Register</button>
         </div>
       </form>
       <div>

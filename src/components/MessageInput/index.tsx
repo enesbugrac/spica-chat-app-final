@@ -2,7 +2,7 @@ import { RealtimeConnection } from "@spica-devkit/bucket";
 import React, { useRef, useEffect } from "react";
 import AuthService, { User } from "../../services/Auth.service";
 import MessageService from "../../services/Message.service";
-import styles from "./styles.module.css";
+import "./styles.css";
 
 function MessageInput(props: any) {
   const [value, setValue] = React.useState("");
@@ -25,31 +25,31 @@ function MessageInput(props: any) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const user: User = AuthService.user;
+    const user: User | null = AuthService.user;
     messageConnection.current?.insert({
-      sender_user_id: user._id,
+      sender_user_id: user?._id,
       text: value,
-      sender_name: user.user_name,
+      sender_name: user?.user_name,
       room_id: props.roomId,
     });
     setValue("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles["message-input-container"]}>
+    <form onSubmit={handleSubmit} className="message-input-container">
       <input
         type="text"
         placeholder="Enter a message"
         value={value}
         onChange={handleChange}
-        className={styles["message-input"]}
+        className="message-input"
         required
         minLength={1}
       />
       <button
         type="submit"
         disabled={value.length < 1}
-        className={styles["send-message"]}
+        className="send-message"
       >
         Send
       </button>
