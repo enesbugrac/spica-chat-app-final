@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/Auth.service";
-import "./styles.css";
 
 function Login() {
   const [loginInput, setloginInput] = useState({
@@ -17,7 +16,7 @@ function Login() {
       AuthService.login(loginInput.username, loginInput.password)
         .then(async (res) => {
           localStorage.setItem("userJWT", res);
-          await AuthService.auth();
+          AuthService.auth().then(() => navigate("/landing"));
         })
         .catch((err) => alert(err.message))
         .finally(() => {
@@ -30,13 +29,14 @@ function Login() {
   };
 
   return (
-    <>
-      <h2>Login to join a Chat!</h2>
-      <form onSubmit={handleSubmit} className="login-input-container">
+    <div className="page">
+      <div className="page-header">
+        <h2>Login to join a Chat!</h2>
+      </div>
+      <form onSubmit={handleSubmit} className="flex-row-center gp-1 mt-2">
         <input
           type="text"
           placeholder="Enter Username"
-          className="login-input"
           required
           name="username"
           value={loginInput.username}
@@ -45,22 +45,19 @@ function Login() {
         <input
           type="password"
           placeholder="Enter Password"
-          className="login-input"
           required
           onChange={handleChange}
           value={loginInput.password}
           name="password"
         />
         <div>
-          <button className="login-button">Login</button>
+          <button>Login</button>
         </div>
       </form>
-      <div>
-        <Link to="/register" style={{ color: "var(--color-blue)" }}>
-          Register
-        </Link>
+      <div className="mt-2 flex-row-center justify-center w-100">
+        <Link to="/register">Or Register</Link>
       </div>
-    </>
+    </div>
   );
 }
 

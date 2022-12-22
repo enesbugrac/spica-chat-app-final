@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/Auth.service";
-import "./styles.css";
 
 function Register() {
   const [registerInput, setregisterInput] = useState({
@@ -25,13 +24,14 @@ function Register() {
   };
 
   return (
-    <>
-      <h2>Register to join a Chat!</h2>
-      <form onSubmit={handleSubmit} className="register-input-container">
+    <div className="page">
+      <div className="page-header">
+        <h2>Register to join a Chat!</h2>
+      </div>
+      <form onSubmit={handleSubmit} className="flex-row-center gp-1 mt-2">
         <input
           type="text"
           placeholder="Enter Username"
-          className="register-input"
           required
           name="username"
           value={registerInput.username}
@@ -40,22 +40,19 @@ function Register() {
         <input
           type="password"
           placeholder="Enter Password"
-          className="register-input"
           required
           onChange={handleChange}
           value={registerInput.password}
           name="password"
         />
         <div>
-          <button className="register-button">Register</button>
+          <button>Register</button>
         </div>
       </form>
-      <div>
-        <Link to="/" style={{ color: "var(--color-blue)" }}>
-          Login
-        </Link>
+      <div className="mt-2 flex-row-center justify-center w-100">
+        <Link to="/">Or Login</Link>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -4,14 +4,11 @@
 
 html {
   --color-background: hsl(216, 8%, 12%);
-  --color-blue: hsl(208, 100%, 50%);
+  --color-blue: #dbe4eb;
   --color-gray: hsl(210, 3%, 25%);
   --color-red: hsl(7, 73%, 35%);
-  --color-white: white;
   --border-radius: 5px;
-
-  background-color: var(--color-background);
-  color: var(--color-white);
+  --border-color: rgba(0, 0, 0, 0.2);
 }
 
 html,
@@ -40,26 +37,81 @@ ul {
 
 button {
   cursor: pointer;
+  border: none;
+  padding: 14px 20px;
+  white-space: nowrap;
+}
+input {
+  border: 1px solid var(--border-color);
+  padding: 12px 8px;
+  width: 100%;
 }
 
 input,
 button {
   font-size: 1rem;
   color: inherit;
-  border: none;
   border-radius: var(--border-radius);
 }
 
+/* Custom Classes */
+
+.w-100 {
+  width: 100%;
+}
+.mt-1 {
+  margin-top: 1rem;
+}
+.mt-2 {
+  margin-top: 2rem;
+}
+.mt-3 {
+  margin-top: 3rem;
+}
+
+.gp-1 {
+  gap: 10px;
+}
+.gp-2 {
+  gap: 20px;
+}
+.gp-3 {
+  gap: 30px;
+}
+.justify-center{
+  justify-content: center;
+}
+.flex-row-center {
+  display: flex;
+  align-items: center;
+}
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+.flex-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .container {
   height: 100%;
-
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
   padding: 32px;
-
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 32px;
+}
+.page {
+  width: 100%;
+}
+.page-header {
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+.card {
+  padding: 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
 }

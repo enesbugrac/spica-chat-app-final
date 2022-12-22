@@ -29,44 +29,49 @@ function Landing() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    const user: any = await AuthService.auth().catch(console.error);
     roomConnection.current?.insert({
       room_title: newRoom,
-      creator_user_id: user._id,
+      creator_user_id: AuthService?.user?._id,
     });
   };
   return (
-    <>
-      <h2>Choose a Chat Room</h2>
-      <input
-        className="room-input"
-        value={newRoom}
-        placeholder="Enter New Room Title..."
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setNewRoom(e.target.value)
-        }
-      />
-      <button className="create-room-button" onClick={handleCreateNewRoom}>
-        Create New Room
-      </button>
-      <button
-        className="log-out-button"
-        onClick={() => {
-          localStorage.removeItem("userJWT");
-          AuthService.auth();
-          navigate("/login");
-        }}
-      >
-        Log Out
-      </button>
-      <ul className="chat-room-list">
+    <div className="page">
+      <div className="flex-row-between page-header">
+        <h2>Choose a Chat Room</h2>
+        <button
+          onClick={() => {
+            localStorage.removeItem("userJWT");
+            AuthService.auth();
+            navigate("/");
+          }}
+        >
+          Log Out
+        </button>
+      </div>
+
+      <div className="flex-row-center gp-2 mt-3">
+        <input
+          value={newRoom}
+          placeholder="Enter New Room Title..."
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewRoom(e.target.value)
+          }
+        />
+        <button onClick={handleCreateNewRoom}>
+          Create New Room
+        </button>
+      </div>
+
+      <ul className="chat-room-list card">
         {chatRooms?.map((room) => (
-          <li key={room._id}>
-            <Link to={`/room/${room._id}`}>{room.room_title}</Link>
-          </li>
+          <Link className="card" to={`/room/${room._id}`}>
+            <li  key={room._id}>
+              {room.room_title}
+            </li>
+          </Link>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 

@@ -2,7 +2,6 @@ import { RealtimeConnection } from "@spica-devkit/bucket";
 import React, { useRef, useEffect } from "react";
 import AuthService, { User } from "../../services/Auth.service";
 import MessageService from "../../services/Message.service";
-import "./styles.css";
 
 function MessageInput(props: any) {
   const [value, setValue] = React.useState("");
@@ -36,21 +35,16 @@ function MessageInput(props: any) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="message-input-container">
+    <form onSubmit={handleSubmit} className="flex-row-center gp-2">
       <input
         type="text"
         placeholder="Enter a message"
         value={value}
         onChange={handleChange}
-        className="message-input"
         required
         minLength={1}
       />
-      <button
-        type="submit"
-        disabled={value.length < 1}
-        className="send-message"
-      >
+      <button type="submit" disabled={value.length < 1}>
         Send
       </button>
     </form>

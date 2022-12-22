@@ -2,27 +2,16 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 2rem;
+  height: 425px;
+  min-height: 425px;
+  overflow-y: scroll;
 }
-.room-input {
-  padding: 12px 8px;
-  background: var(--color-gray);
-  border-radius: var(--border-radius);
-}
-.chat-room-list li {
+.chat-room-list a {
+  cursor: pointer;
   height: 100px;
-  background: var(--color-gray);
   flex: 1 1 calc(50% - 4px);
-  border-radius: var(--border-radius);
-
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.create-room-button {
-  background: var(--color-blue);
-  padding: 16px;
-}
-.log-out-button {
-  background: var(--color-red);
-  padding: 16px;
 }

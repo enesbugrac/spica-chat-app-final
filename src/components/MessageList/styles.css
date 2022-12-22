@@ -1,16 +1,10 @@
 .message-list-container {
+  overflow-y: auto;
+  height: 450px;
+  min-height: 450px;
   margin-bottom: 16px;
-  flex: 1;
-  overflow: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
-}
-
-.message-list {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .message {
@@ -20,8 +14,6 @@
   display: flex;
   flex-direction: column;
   justify-items: center;
-  background: var(--color-gray);
-  border-radius: var(--border-radius);
   text-align: left;
 }
 

@@ -3,7 +3,7 @@ import { MessageInput } from "../MessageInput";
 import { MessageList } from "../MessageList";
 import { useState, useEffect } from "react";
 import RoomService from "../../services/Room.service";
-import AuthService from "../../services/Auth.service";
+
 import "./styles.css";
 
 function ChatRoom() {
@@ -18,16 +18,15 @@ function ChatRoom() {
   }, [params.id, navigate]);
 
   return (
-    <>
-      <h2>{room?.room_title}</h2>
-      <div>
-        <Link to="/landing">⬅️ Back to all rooms</Link>
+    <div className="page flex-column w-100">
+      <div className="page-header flex-row-center gp-1">
+        <Link to="/landing">⬅️ </Link> <h2> {room?.room_title}</h2>
       </div>
-      <div className="messages-container">
+      <div className="messages-container mt-3">
         <MessageList roomId={room?._id} />
         <MessageInput roomId={room?._id} />
       </div>
-    </>
+    </div>
   );
 }
 

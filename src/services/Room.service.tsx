@@ -8,7 +8,9 @@ class RoomService {
     return Bucket.data.get(this.BUCKET_ID, roomId);
   };
   getRealtimeConnection = () => {
-    this.connection = Bucket.data.realtime.getAll(this.BUCKET_ID);
+    this.connection = Bucket.data.realtime.getAll(this.BUCKET_ID, {
+      sort: { _id: -1 },
+    });
     return this.connection;
   };
 }

@@ -56,18 +56,12 @@ class AuthService {
 
   auth = async () => {
     const jwt = this.getJwt();
-    if (jwt) {
-      this.bucketInitialize();
-      let identityUser: any = await Identity.verifyToken(jwt).catch((err) => {
-        alert(err.message);
-      });
-      return await UserService.getUser(identityUser.attributes.user).then(
+    this.bucketInitialize();
+    return Identity.verifyToken(jwt).then((identityUser: any) =>
+      UserService.getUser(identityUser.attributes.user).then(
         (res) => (this.user = res)
-      );
-    } else {
-      this.user = null;
-      return;
-    }
+      )
+    );
   };
 }
 
